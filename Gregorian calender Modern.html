@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+	
+		<!-- Titel på hemsidan -->
+		<title>Gregorian calender Modern</title>
+		
+		<!-- Övrig nödvändig kod -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Oscar Lysgren">
+		<META NAME="Description" CONTENT="JavaScript">
+		<meta charset="UTF-8">
+		
+		<!-- Favicon -->
+		<link rel="icon" href="favicon.png" type="image/x-icon">
+		
+<style>
+
+</style>
+
+</head>
+<body>
+
+	<center>	
+	  <form>
+		  <table>
+			  <tr>
+			    <td>Year:</td>
+				<td><input type="text" id="year"  size="5"></td>
+			  </tr>
+
+			  <tr>
+				  <td>Month:</td>
+				  <td><input type="text" id="month" size="5"></td>
+			  </tr>
+
+			  <tr>
+				<td>Day:</td>
+				<td><input type="text" id="day" size="5"></td>
+			  </tr>
+			  
+			  <tr>
+				  <td>&nbsp;</td>
+			      <td><input type="button" id="button" value="Calculate" onclick="handleInput(this.form);"></td>
+			  </tr>
+		  </table>
+		</form>
+	</center>
+
+	<p align=center id="output"></p>
+
+<script>
+"use strict";
+
+let today = new Date();
+document.getElementById("year").value  = today.getFullYear();
+document.getElementById("month").value  = today.getMonth() + 1;
+document.getElementById("day").value  = today.getDate();
+
+function handleInput(form) {
+
+  try {
+    // Get input and convert the string to integrals
+    let intYear = parseInt(form.year.value);
+    let intMonth = parseInt(form.month.value); 
+    let intDay = parseInt(form.day.value);
+
+    if (isNaN(intYear) || isNaN(intMonth) || isNaN(intDay) ) {
+      throw "Year, month and day needs to be numbers";
+	}
+
+	// Checks if Year is in expected range (0-9999)
+    if (intYear < 1 || intYear > 9999) {
+      throw "Year is out of expected range (1-9999).";
+
+	// Checks if Month is in expected range (1-12)	  
+	} else if (intMonth < 1 || intMonth > 12) {
+      throw "Month is out of expected range (1-12).";
+	}
+
+	// Checks if Day is in expected range (depends which month it is)
+    if ( ( intDay < 1 || intDay > 31 ) && ( intMonth == 1 || intMonth == 3 || intMonth == 5 || intMonth == 7 || intMonth == 8 || intMonth == 10 || intMonth == 12 )) {
+      throw "Day is out of expected range (1-31).";
+    
+	} else if ( ( intDay < 1 || intDay > 30 ) && ( intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11 )) {
+      throw "Day is out of expected range (1-30).";
+    
+	} else if (intMonth == 2) {
+      if ((intYear % 400 == 0) || (intYear % 4 == 0 && intYear % 100 != 0)) {
+        if ( intDay > 29 ) {
+          throw "Day is out of expected range (1-29).";
+        }
+      } else {
+        if ( intDay > 28 ) {
+          throw "Day is out of expected range (1-28)"
+        }
+      }
+    }
+
+	//let day = (intDay + Math.floor(13 * (intMonth + 1) / 5) + intYear + Math.floor(intYear / 4) - Math.floor(intYear / 100) + Math.floor(intYear / 400)) % 7;
+	// document.getElementById("output").innerHTML = "The day is a: " + day;
+
+	let whichDay = new Date(intYear, intMonth, intDay);
+	let days = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'];
+
+    document.getElementById("output").innerHTML = "The day is a: " + days[whichDay.getDay()];
+  
+  } 
+  
+  catch (error) {document.getElementById("output").innerHTML = "ERROR: " + error;}
+  
+}
+
+</script>
+
+</body>
+</html>
